@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/jessevdk/go-flags"
 	"github.com/ulngollm/time-report/api"
 	"github.com/ulngollm/time-report/service"
-	"log"
-	"os"
 )
 
 type app struct {
@@ -21,11 +22,11 @@ const (
 )
 
 type options struct {
-	Mode      mode   `short:"m" long:"mode" default:"stats"`
-	ApiToken  string `long:"token" env:"TOKEN" required:"true"`
-	ApiHost   string `long:"host" env:"API_HOST" required:"true"`
-	Labels    string `long:"labels" env:"LABELS" required:"true"`
-	ProjectID int    `long:"project" env:"PROJECT_ID" required:"true"`
+	Mode      mode   `short:"m" long:"mode" default:"stats" choice:"stats" choice:"report"`
+	ApiToken  string `long:"token" env:"TOKEN" required:"true" description:"Gitlab personal access token"`
+	ApiHost   string `long:"host" env:"API_HOST" required:"true" description:"Gitlab base API URL"`
+	Labels    string `long:"labels" env:"LABELS" required:"true" default:"any"`
+	ProjectID int    `long:"project" env:"PROJECT_ID" required:"true" description:"Gitlab project ID"`
 }
 
 func main() {
@@ -55,7 +56,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		fmt.Println(spend)
+		fmt.Println("total time spend", spend)
 	case modeReport:
 		repo, err := cmd.s.GetReport()
 		if err != nil {
