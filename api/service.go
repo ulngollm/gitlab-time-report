@@ -31,30 +31,30 @@ func NewGitlabAPI(conf Config) *GitlabAPI {
 	}
 }
 
-func (a GitlabAPI) GetIssues() (Issue, error) {
-	endpoint := fmt.Sprintf(projectIssuesEndpoint, perPage, a.conf.ProjectID, a.conf.Labels)
-	req, err := http.NewRequest("GET", a.conf.Host+endpoint, nil)
+func (a GitlabAPI) GetIssues() ([]Issue, error) {
+	endpoint := fmt.Sprintf(a.conf.Host+projectIssuesEndpoint, a.conf.ProjectID, perPage, a.conf.Labels)
+	req, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
-		return Issue{}, fmt.Errorf("create request: %w", err)
+		return nil, fmt.Errorf("create request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("PRIVATE-TOKEN", a.conf.Token)
 
 	resp, err := a.client.Do(req)
 	if err != nil {
-		return Issue{}, fmt.Errorf("do request: %w", err)
+		return nil, fmt.Errorf("do request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return Issue{}, fmt.Errorf("status is not ok: %s", resp.Status)
+		return nil, fmt.Errorf("status is not ok: %s", resp.Status)
 	}
 
-	var issues Issue
-	err = json.NewDecoder(resp.Body).Decode(&issues)
+	var response []Issue
+	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
-		return Issue{}, fmt.Errorf("decode: %w", err)
+		return nil, fmt.Errorf("decode: %w", err)
 	}
 
-	return issues, nil
+	return response, nil
 }

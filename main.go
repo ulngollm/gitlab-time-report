@@ -48,7 +48,7 @@ func main() {
 	}
 
 	if opts.Mode == modeStats {
-		spend, err := cmd.s.GeTotalTimeSpend()
+		spend, err := cmd.s.GetTotalTimeSpend()
 		if err != nil {
 			log.Printf("getTotalTimeSpend: %s", err)
 			os.Exit(1)

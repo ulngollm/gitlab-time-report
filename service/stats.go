@@ -1,8 +1,10 @@
 package service
 
 import (
-	"github.com/ulngollm/time-report/api"
+	"fmt"
 	"time"
+
+	"github.com/ulngollm/time-report/api"
 )
 
 type StatsService struct {
@@ -13,6 +15,16 @@ func NewStatsService(api *api.GitlabAPI) *StatsService {
 	return &StatsService{api: api}
 }
 
-func (s StatsService) GeTotalTimeSpend() (time.Duration, error) {
-	return time.Duration(3600 * time.Second), nil
+func (s StatsService) GetTotalTimeSpend() (time.Duration, error) {
+	issues, err := s.api.GetIssues()
+	if err != nil {
+		return 0, fmt.Errorf("getIssues: %w", err)
+	}
+
+	totalTime := time.Duration(0)
+	for _, issue := range issues {
+		totalTime += time.Duration(issue.TimeStats.TotalTimeSpent) * time.Second
+	}
+
+	return totalTime, nil
 }
