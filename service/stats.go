@@ -25,6 +25,30 @@ func (s StatsService) GetTotalTimeSpend() (time.Duration, error) {
 	for _, issue := range issues {
 		totalTime += time.Duration(issue.TimeStats.TotalTimeSpent) * time.Second
 	}
-
 	return totalTime, nil
+}
+
+func (s StatsService) GetReport() (string, error) {
+	issues, err := s.api.GetIssues()
+	if err != nil {
+		return "", fmt.Errorf("getIssues: %w", err)
+	}
+
+	report := ""
+	for _, issue := range issues {
+		rawTimeSpent := *issue.TimeStats.HumanTotalTimeSpent
+		if rawTimeSpent == "" {
+			dur := "00:00"
+			report += fmt.Sprintf("%d,%s\n", issue.Iid, dur)
+			continue
+		}
+
+		var hours, minutes int
+		_, err := fmt.Sscanf(rawTimeSpent, "%dh %dm", &hours, &minutes)
+		if err != nil {
+			return "", fmt.Errorf("sscanf: %w", err)
+		}
+		report += fmt.Sprintf("%d,%02d:%02d\n", issue.Iid, hours, minutes)
+	}
+	return report, nil
 }

@@ -16,8 +16,8 @@ type app struct {
 type mode string
 
 const (
-	modeStats   mode = "stats"
-	modeVerbose mode = "verbose"
+	modeStats  mode = "stats"
+	modeReport mode = "report"
 )
 
 type options struct {
@@ -47,7 +47,8 @@ func main() {
 		),
 	}
 
-	if opts.Mode == modeStats {
+	switch opts.Mode {
+	case modeStats:
 		spend, err := cmd.s.GetTotalTimeSpend()
 		if err != nil {
 			log.Printf("getTotalTimeSpend: %s", err)
@@ -55,5 +56,12 @@ func main() {
 		}
 
 		fmt.Println(spend)
+	case modeReport:
+		repo, err := cmd.s.GetReport()
+		if err != nil {
+			log.Printf("getTotalTimeSpend: %s", err)
+			os.Exit(1)
+		}
+		fmt.Println(repo)
 	}
 }

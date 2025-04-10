@@ -25,6 +25,7 @@ type Issue struct {
 	Type       string    `json:"type"`
 	Labels     []string  `json:"labels"`
 	Id         int       `json:"id"`
+	Iid        int       `json:"iid"`
 	Title      string    `json:"title"`
 	UpdatedAt  time.Time `json:"updated_at"`
 	CreatedAt  time.Time `json:"created_at"`
