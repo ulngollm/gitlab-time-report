@@ -32,7 +32,7 @@ The tool requires several parameters to be passed either via command-line argume
 Example command:
 
 ```bash
-./gitlab-time-report --mode stats --token YOUR_TOKEN --host https://gitlab.com/api/v4 --project YOUR_PROJECT_ID
+./gitlab-time-report --mode stats --token YOUR_TOKEN --host https://gitlab.com --project YOUR_PROJECT_ID
 ```
 
 ## Environment Variables

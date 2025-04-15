@@ -17,12 +17,13 @@ type app struct {
 type mode string
 
 const (
+	modeFull   mode = "full"
 	modeStats  mode = "stats"
 	modeReport mode = "report"
 )
 
 type options struct {
-	Mode      mode   `short:"m" long:"mode" default:"stats" choice:"stats" choice:"report"`
+	Mode      mode   `short:"m" long:"mode" default:"full" choice:"stats" choice:"report" choice:"full" choice:"full"`
 	ApiToken  string `long:"token" env:"TOKEN" required:"true" description:"Gitlab personal access token"`
 	ApiHost   string `long:"host" env:"API_HOST" required:"true" description:"Gitlab base API URL"`
 	Labels    string `long:"labels" env:"LABELS" required:"true" default:"any"`
@@ -48,21 +49,21 @@ func main() {
 		),
 	}
 
-	switch opts.Mode {
-	case modeStats:
+	if opts.Mode == modeReport || opts.Mode == modeFull {
 		spend, err := cmd.s.GetTotalTimeSpend()
 		if err != nil {
 			log.Printf("getTotalTimeSpend: %s", err)
 			os.Exit(1)
 		}
-
 		fmt.Println("total time spend", spend)
-	case modeReport:
-		repo, err := cmd.s.GetReport()
+	}
+
+	if opts.Mode == modeReport || opts.Mode == modeFull {
+		report, err := cmd.s.GetReport()
 		if err != nil {
 			log.Printf("getTotalTimeSpend: %s", err)
 			os.Exit(1)
 		}
-		fmt.Println(repo)
+		fmt.Println(report)
 	}
 }
