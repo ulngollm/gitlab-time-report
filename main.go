@@ -25,7 +25,7 @@ const (
 type options struct {
 	Mode      mode   `short:"m" long:"mode" default:"full" choice:"stats" choice:"report" choice:"full" choice:"full"`
 	ApiToken  string `long:"token" env:"TOKEN" required:"true" description:"Gitlab personal access token"`
-	ApiHost   string `long:"host" env:"API_HOST" required:"true" description:"Gitlab base API URL"`
+	ApiHost   string `long:"host" env:"API_HOST" default:"https://gitlab.com" required:"true" description:"Gitlab base API URL"`
 	Labels    string `long:"labels" env:"LABELS" required:"true" default:"any"`
 	ProjectID int    `long:"project" env:"PROJECT_ID" required:"true" description:"Gitlab project ID"`
 }
