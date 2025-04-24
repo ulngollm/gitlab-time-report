@@ -49,7 +49,7 @@ func main() {
 		),
 	}
 
-	if opts.Mode == modeReport || opts.Mode == modeFull {
+	if opts.Mode == modeStats || opts.Mode == modeFull {
 		spend, err := cmd.s.GetTotalTimeSpend()
 		if err != nil {
 			log.Printf("getTotalTimeSpend: %s", err)
