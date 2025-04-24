@@ -40,18 +40,15 @@ func (s *StatsService) GetReport() (string, error) {
 
 	report := ""
 	for _, issue := range issues {
-		rawTimeSpent := *issue.TimeStats.HumanTotalTimeSpent
-		if rawTimeSpent == "" {
-			dur := "00:00"
-			report += fmt.Sprintf("%d,%s\n", issue.Iid, dur)
+		rawTimeSpent := issue.TimeStats.TotalTimeSpent
+		var hours, minutes int
+		if rawTimeSpent == 0 {
+			report += fmt.Sprintf("%d,%02d:%02d\n", issue.Iid, hours, minutes)
 			continue
 		}
 
-		var hours, minutes int
-		_, err := fmt.Sscanf(rawTimeSpent, "%dh %dm", &hours, &minutes)
-		if err != nil {
-			return "", fmt.Errorf("sscanf: %w", err)
-		}
+		hours = rawTimeSpent / 3600
+		minutes = (rawTimeSpent % 3600) / 60
 		report += fmt.Sprintf("%d,%02d:%02d\n", issue.Iid, hours, minutes)
 	}
 	return report, nil
